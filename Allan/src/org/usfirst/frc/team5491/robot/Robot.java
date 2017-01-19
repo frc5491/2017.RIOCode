@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		myRobot.arcadeDrive(stick);
+		myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
 	}
 
 	/**
