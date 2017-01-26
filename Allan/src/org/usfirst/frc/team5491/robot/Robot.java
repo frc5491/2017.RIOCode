@@ -3,9 +3,11 @@ package org.usfirst.frc.team5491.robot;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.*;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -23,12 +25,15 @@ import edu.wpi.cscore.UsbCamera;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot = new RobotDrive(0, 1);
+	Victor myShooter = new Victor(2);
 	Joystick stick = new Joystick(0);
 	Timer timer = new Timer();
 	Thread visionThread;
-
+	Victor myBallColl = new Victor(3);
+	
 	@Override
 	public void robotInit() {
 		visionThread = new Thread(() -> {
@@ -100,6 +105,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+	myBallColl.set(5.0); //Speed Variable Here for Ball Collector
 	}
 
 	/**
@@ -108,7 +114,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
-	}
+		if (stick.getRawButton(1)){ 
+			myShooter.set(0.5); 
+		} else {
+				myShooter.set(0.0);}
+}
+
+		
 
 	/**
 	 * This function is called periodically during test mode
