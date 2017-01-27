@@ -33,9 +33,11 @@ public class Robot extends IterativeRobot {
 	Timer timer = new Timer();
 	Thread visionThread;
 	Victor myBallColl = new Victor(3);
+	Double speedShoot;
 	
 	@Override
-	public void robotInit() {
+	public void robotInit() {	
+		
 		visionThread = new Thread(() -> {
 			// Get the UsbCamera from CameraServer
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -113,9 +115,138 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		if (stick.getThrottle() < -0.9 || stick.getThrottle() > -1.0) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.0;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next1
+		if (stick.getThrottle() < -0.8 || stick.getThrottle() > -0.9) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.05;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next2
+		if (stick.getThrottle() < -0.7 || stick.getThrottle() > -0.8) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.1;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next3
+		if (stick.getThrottle() < -0.6 || stick.getThrottle() > -0.7) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.15;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next4
+		if (stick.getThrottle() < -0.5 || stick.getThrottle() > -0.6) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.2;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next5
+		if (stick.getThrottle() < -0.4 || stick.getThrottle() > -0.5) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.25;
+		} else {
+			speedShoot = 0.0;
+		}
+		//next6
+		if (stick.getThrottle() < -0.3 || stick.getThrottle() > -0.4) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.3;
+		} else {
+			speedShoot = 0.0;
+		}
+		//num8 - below
+		if (stick.getThrottle() < -0.2 || stick.getThrottle() > -0.3) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.35;
+		} else {
+			speedShoot = 0.0;
+		}
+		//num9 - below
+		if (stick.getThrottle() < -0.1 || stick.getThrottle() > -0.2) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.4;
+		} else {
+			speedShoot = 0.0;
+		}
+		//num10 - below
+		if (stick.getThrottle() < 0.0 || stick.getThrottle() > -0.1) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.45;
+		} else {
+			speedShoot = 0.0;
+		}
+		//num11 - below
+		if (stick.getThrottle() < 0.1 || stick.getThrottle() > 0.0) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+			speedShoot = 1.5;
+		} else {
+			speedShoot = 0.0;
+		}
+				//num12 - below
+				if (stick.getThrottle() < 0.2 || stick.getThrottle() > 0.1) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.55;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num13 - below
+				if (stick.getThrottle() < 0.3 || stick.getThrottle() > 0.2) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.6;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num14 - below
+				if (stick.getThrottle() < 0.4 || stick.getThrottle() > 0.3) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.65;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num15 - below
+				if (stick.getThrottle() < 0.5 || stick.getThrottle() > 0.4) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.7;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num16 - below
+				if (stick.getThrottle() < 0.6 || stick.getThrottle() > 0.5) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.75;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num17 - below
+				if (stick.getThrottle() < 0.7 || stick.getThrottle() > 0.6) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.8;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num18 - below
+				if (stick.getThrottle() < 0.8 || stick.getThrottle() > 0.7) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.85;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num19 - below
+				if (stick.getThrottle() < 0.9 || stick.getThrottle() > 0.8) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.9;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num20 - below
+				if (stick.getThrottle() < 1.0 || stick.getThrottle() > 0.9) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 1.95;
+				} else {
+					speedShoot = 0.0;
+				}
+				//num21 - below
+				if (stick.getThrottle() < 1.1 || stick.getThrottle() > 1.0) {  // A Series Of IF THEN ELSE Statements to Configure Shooter Speed
+					speedShoot = 2.00;
+				} else {
+					speedShoot = 0.0;
+				}
+				System.out.println(speedShoot);
+				System.out.println(stick.getThrottle());
+		//Drive Code
 		myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
+		// Shoot Code
 		if (stick.getRawButton(1)){ 
-			myShooter.set(0.5); 
+			myShooter.set(speedShoot); 
 		} else {
 				myShooter.set(0.0);}
 }
