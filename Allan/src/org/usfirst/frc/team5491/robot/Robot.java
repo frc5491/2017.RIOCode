@@ -18,6 +18,8 @@ import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 
+import edu.wpi.first.wpilibj.buttons.Button;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -118,13 +120,16 @@ public class Robot extends IterativeRobot {
 		myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
 		// Shoot Code
 		if (stick.getRawButton(1)){ 
-			myShooter.setSpeed(stick.getThrottle());
-		} else {
-				myShooter.setSpeed(0.0);}
+			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
+		}
+		if (stick.getThrottle() > -0.5) {
+			if (stick.getRawButton(1)){ 
+				myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
+			}
+		}
 }
 
 		
-
 	/**
 	 * This function is called periodically during test mode
 	 */
