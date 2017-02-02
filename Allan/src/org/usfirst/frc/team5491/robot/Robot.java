@@ -121,13 +121,13 @@ public class Robot extends IterativeRobot {
 		// Shoot Code
 		if (stick.getRawButton(1)){ 
 			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
-		}
-		if (stick.getThrottle() > -0.5) {
-			if (stick.getRawButton(1)){ 
-				myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
-			}
-		}
-}
+		} //Toggle Mode Save For Button Board
+		/*if (stick.getRawButton(1)){ 
+			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
+		} else {
+			myShooter.setSpeed(0);
+		}*/
+	}
 
 		
 	/**
