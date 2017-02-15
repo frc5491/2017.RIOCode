@@ -31,15 +31,18 @@ import edu.wpi.first.wpilibj.buttons.Button;
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot = new RobotDrive(0, 1);
 	Victor myShooter = new Victor(2);
+	Victor myLeft = new Victor(0);
+	Victor myRight = new Victor(1);
 	Joystick stick = new Joystick(0);
 	Timer timer = new Timer();
 	Thread visionThread;
 	Victor myBallColl = new Victor(3);
+	double r;
 	
 	@Override
 	public void robotInit() {	
 		
-		visionThread = new Thread(() -> {
+		/*visionThread = new Thread(() -> {
 			// Get the UsbCamera from CameraServer
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			// Set the resolution
@@ -74,7 +77,7 @@ public class Robot extends IterativeRobot {
 		});
 		visionThread.setDaemon(true);
 		visionThread.start();
-	}
+	}*/
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -94,13 +97,19 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
+	 r = timer.get();
+		
 		// Drive for 2 seconds
-		if (timer.get() < 2.0) {
-			myRobot.drive(-0.5, 0.0); // drive forwards half speed
+		if (r < 2.0) {
+			myLeft.setSpeed(0.5);
+			myRight.setSpeed(0.5);
+			
 		} else {
-			myRobot.drive(0.0, 0.0); // stop robot
-		}
+		myLeft.setSpeed(0.0);
+		myRight.setSpeed(0.0);
 	}
+}
 
 	/**
 	 * This function is called once each time the robot enters tele-operated
