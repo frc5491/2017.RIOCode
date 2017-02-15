@@ -31,8 +31,8 @@ import edu.wpi.first.wpilibj.buttons.Button;
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot = new RobotDrive(0, 1);
 	Victor myShooter = new Victor(2);
-	Victor myLeft = new Victor(0);
-	Victor myRight = new Victor(1);
+	Victor myLeft = new Victor(4);
+	Victor myRight = new Victor(5);
 	Joystick stick = new Joystick(0);
 	Timer timer = new Timer();
 	Thread visionThread;
@@ -126,7 +126,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Drive Code
-		myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
+		//myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
 		// Shoot Code
 		if (stick.getRawButton(1)){ 
 			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
