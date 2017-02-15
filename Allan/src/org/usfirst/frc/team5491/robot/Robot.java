@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {	
 		
-		/*visionThread = new Thread(() -> {
+		visionThread = new Thread(() -> {
 			// Get the UsbCamera from CameraServer
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			// Set the resolution
@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
 		});
 		visionThread.setDaemon(true);
 		visionThread.start();
-	}*/
+	}
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
