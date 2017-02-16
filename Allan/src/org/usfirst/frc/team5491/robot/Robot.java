@@ -37,7 +37,13 @@ public class Robot extends IterativeRobot {
 	Timer timer = new Timer();
 	Thread visionThread;
 	Victor myBallColl = new Victor(3);
-	double r;
+	double myTimer;
+	float x;
+	float y;
+	double m;
+	Float xvar;
+	Float yvar;
+	Float yvarneg;
 	
 	@Override
 	public void robotInit() {	
@@ -98,10 +104,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		
-	 r = timer.get();
+	 myTimer = timer.get();
 		
 		// Drive for 2 seconds
-		if (r < 2.0) {
+		if (myTimer < 2.0) {
 			myLeft.setSpeed(0.5);
 			myRight.setSpeed(0.5);
 			
@@ -126,7 +132,62 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Drive Code
+		float x = (float) stick.getX(); //Variables
+		float y = (float) stick.getY();
+		float m = 2;
+		float n = -1;
+		xvar = Float.valueOf(Float.valueOf(x) * Float.valueOf(m));
+		yvar = Float.valueOf(Float.valueOf(y) * Float.valueOf(m));
+		yvarneg = Float.valueOf(Float.valueOf(y) * Float.valueOf(n));
+		
+		if (xvar < .20 | xvar > -.20 | yvar < .20 | yvar > -.20) { //Dead Band
+			myLeft.setSpeed(0);
+			myRight.setSpeed(0);
+		}
+		
+		if (xvar < .20 | xvar > -.20 | yvar > .20) { //Forwards
+			myLeft.setSpeed(yvar);
+			myRight.setSpeed(yvar);
+		}
+		
+		if (xvar < .20 | xvar > -.20 | yvar < -.20) { //Backwards
+			myLeft.setSpeed(yvar);
+			myRight.setSpeed(yvar);
+		}
+		
+		if (yvar < .20 | yvar > -.20 | xvar > .20) { //Right Turn
+			myLeft.setSpeed(xvar);
+			myRight.setSpeed(0);
+		}
+		
+		if (yvar < .20 | yvar > -.20 | xvar < -.20) { //Left Turn
+			myLeft.setSpeed(0);
+			myRight.setSpeed(xvar);
+		}
+		
+		if (xvar < -.20 | yvar > .20) { //Quadrant 1
+			myLeft.setSpeed(0);
+			myRight.setSpeed(yvar);
+		}
+		
+		if (xvar > .20 | yvar > .20) { //Quadrant 2
+			myLeft.setSpeed(yvar);
+			myRight.setSpeed(0);
+		}
+		
+		if (xvar > .20 | yvar < -.20) { //Quadrant 3
+			myLeft.setSpeed(yvarneg);
+			myRight.setSpeed(0);
+		}
+		
+		if (xvar < -.20 | yvar < -.20) { //Quadrant 4
+			myLeft.setSpeed(0);
+			myRight.setSpeed(yvarneg);
+		}
+		
 		//myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
+		
+		
 		// Shoot Code
 		if (stick.getRawButton(1)){ 
 			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
@@ -136,6 +197,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			myShooter.setSpeed(0);
 		}*/
+		System.out.println();
 	}
 
 		
