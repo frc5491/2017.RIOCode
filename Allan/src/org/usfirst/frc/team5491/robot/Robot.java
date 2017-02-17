@@ -139,64 +139,82 @@ public class Robot extends IterativeRobot {
 		xvar = Float.valueOf(Float.valueOf(x) * Float.valueOf(m));
 		yvar = Float.valueOf(Float.valueOf(y) * Float.valueOf(m));
 		yvarneg = Float.valueOf(Float.valueOf(y) * Float.valueOf(n));
+		int quadrant = 0;
 		
-		if (xvar < .20 | xvar > -.20 | yvar < .20 | yvar > -.20) { //Dead Band
-			myLeft.setSpeed(0);
-			myRight.setSpeed(0);
+		if (xvar == 0 | yvar < 0) {
+			quadrant = 1;
 		}
 		
-		if (xvar < .20 | xvar > -.20 | yvar > .20) { //Forwards
+		if (xvar == 0 | yvar > 0) {
+			quadrant = 2;
+		}
+		
+		if (xvar < 0 | yvar == 0) {
+			quadrant = 3;
+		}
+		
+		if (xvar > 0 | yvar ==0) {
+			quadrant = 4;
+		}
+		
+		if (xvar < 0 | yvar < 0) {
+			quadrant = 5;
+		}
+		
+		if (xvar > 0 | yvar < 0) {
+			quadrant = 6;
+		}
+		
+		if (xvar < 0 | yvar > 0) {
+			quadrant = 7;
+		}
+		
+		if (xvar < 0 | yvar > 0) {
+			quadrant = 8;
+		}
+		
+		switch (quadrant) {
+		case 1: //Forward
 			myLeft.setSpeed(yvar);
 			myRight.setSpeed(yvar);
-		}
-		
-		if (xvar < .20 | xvar > -.20 | yvar < -.20) { //Backwards
+			break;
+		case 2: //Backward
 			myLeft.setSpeed(yvar);
 			myRight.setSpeed(yvar);
-		}
-		
-		if (yvar < .20 | yvar > -.20 | xvar > .20) { //Right Turn
-			myLeft.setSpeed(xvar);
-			myRight.setSpeed(0);
-		}
-		
-		if (yvar < .20 | yvar > -.20 | xvar < -.20) { //Left Turn
+			break;
+		case 3: //Left Turn
 			myLeft.setSpeed(0);
 			myRight.setSpeed(xvar);
-		}
-		
-		if (xvar < -.20 | yvar > .20) { //Quadrant 1
-			myLeft.setSpeed(0);
-			myRight.setSpeed(yvar);
-		}
-		
-		if (xvar > .20 | yvar > .20) { //Quadrant 2
-			myLeft.setSpeed(yvar);
+			break;
+		case 4: //Right Turn
+			myLeft.setSpeed(xvar);
 			myRight.setSpeed(0);
-		}
-		
-		if (xvar > .20 | yvar < -.20) { //Quadrant 3
+			break;
+		case 5: //Quadrant 1 Hard Left Turn
 			myLeft.setSpeed(yvarneg);
-			myRight.setSpeed(0);
-		}
-		
-		if (xvar < -.20 | yvar < -.20) { //Quadrant 4
-			myLeft.setSpeed(0);
+			myRight.setSpeed(yvar);
+			break;
+		case 6: //Quadrant 2 Hard Right Turn
+			myLeft.setSpeed(yvar);
 			myRight.setSpeed(yvarneg);
+			break;
+		case 7: // Quadrant 3 Hard Backwards Right Turn
+			myLeft.setSpeed(yvar);
+			myRight.setSpeed(yvarneg);
+			break;
+		case 8: //Quadrant 4 Hard Backwards Left Turn
+			myLeft.setSpeed(yvarneg);
+			myRight.setSpeed(yvar);
+			break;
 		}
 		
 		//myRobot.arcadeDrive(stick.getY(), -stick.getX()); //Reverse Motor Code Norm=(stick);
-		
-		
 		// Shoot Code
 		if (stick.getRawButton(1)){ 
 			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
-		} //Toggle Mode Save For Button Board
-		/*if (stick.getRawButton(1)){ 
-			myShooter.setSpeed(stick.getThrottle());  //Shooter Gets Speed 
 		} else {
 			myShooter.setSpeed(0);
-		}*/
+		}
 		System.out.println();
 	}
 
