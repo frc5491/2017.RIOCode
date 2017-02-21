@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Drive for 2 seconds
 		if (timer.get() < 2.0) {
-			myRobot.drive(-0.5, 0.0); // drive forwards half speed
+			myRobot.drive(-0.2, -1.0); // drive forwards half speed
 		} else {
 			myRobot.drive(0.0, 0.0); // stop robot
 		}
