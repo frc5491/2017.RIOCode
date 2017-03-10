@@ -3,15 +3,16 @@
 package org.usfirst.frc.team5491.robot;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+//import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
+//import org.opencv.core.Point;
+//import org.opencv.core.Scalar;
+//import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
@@ -21,13 +22,16 @@ import edu.wpi.cscore.UsbCamera;
 
 public class Robot extends IterativeRobot {
 	RobotDrive myRobot = new RobotDrive(0,1);
-	//Spark myShooter = new Spark(2);
+	Spark myShooter = new Spark(2);
 	Spark myBallColl = new Spark(3);
-	Victor myShooter = new Victor(2);
+	DigitalInput AutonomousButtonBoardB1 = new DigitalInput(0);
+	DigitalInput AutonomousButtonBoardB2 = new DigitalInput(1);
+	Victor myShooter1 = new Victor(4);
 	Joystick stick = new Joystick(0);
 	Joystick ButtonBoard = new Joystick(1);
 	Timer timer = new Timer();
 	Thread visionThread;
+	int Num;
 	double myTimer;
 	
 // ------------------------------------------------------------------------------------------------------------------
@@ -71,8 +75,20 @@ public void robotInit() {
 
 @Override
 public void autonomousInit() {
-	timer.reset();
+	/*timer.reset();
 	timer.start();;
+	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == false) {
+		Num = 1;
+	}
+	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == true) {
+		Num = 2;
+	}
+	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == false) {
+		Num = 3;
+	}
+	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == true) {
+		Num = 4;
+	}*/
 }
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -82,8 +98,8 @@ public void autonomousInit() {
 public void autonomousPeriodic() {
 	myTimer = timer.get();
 	
-	if (ButtonBoard.getRawButton(5) == false | ButtonBoard.getRawButton(6) == false) { //A Mode
-		if (myTimer < 2.0) {
+	if (Num == 1) { //A Mode
+		if (myTimer < 0.25) {
 			myRobot.drive(0.1, -1.0);
 		}
 		if (myTimer < 3.0 | myTimer > 2.0) {
@@ -112,7 +128,7 @@ public void autonomousPeriodic() {
 		}
 	}
 		
-		if (ButtonBoard.getRawButton(5) == false | ButtonBoard.getRawButton(6) == true) { //B Mode
+		if (Num == 2) { //B Mode
 			if (myTimer < 2.0) {
 				myRobot.drive(0.1, -1.0);
 			}
@@ -141,7 +157,7 @@ public void autonomousPeriodic() {
 				
 			}
 		}
-			if (ButtonBoard.getRawButton(5) == true | ButtonBoard.getRawButton(6) == false) { //C Mode
+			if (Num == 3) { //C Mode
 				if (myTimer < 2.0) {
 					myRobot.drive(0.1, -1.0);
 				}
@@ -159,7 +175,7 @@ public void autonomousPeriodic() {
 				}
 			}
 				
-				if (ButtonBoard.getRawButton(5) == true | ButtonBoard.getRawButton(6) == true) { //D Mode
+				if (Num == 4) { //D Mode
 					if (myTimer < 2.0) {
 						myRobot.drive(0.1, -1.0);
 					}
