@@ -87,7 +87,7 @@ public void autonomousPeriodic() {
 			myRobot.drive(0.1, -1.0);
 		}
 		if (myTimer < 3.0 | myTimer > 2.0) {
-			myRobot.drive(0.1, -1.0);
+			myRobot.drive(-0.2, 0.0);
 			
 		}
 		if (myTimer < 4.0 | myTimer > 3.0) {
@@ -370,14 +370,13 @@ public void testPeriodic() {
 	//Live.Window.run;
 	
 	myRobot.arcadeDrive(stick.getY(), -stick.getX());
+	
 	if (stick.getRawButton(1)) {
 		myShooter.set(stick.getThrottle());
-		if (stick.getRawButton(2)) {
-			myShooter.set(stick.getThrottle()/2);
 		}else{ myShooter.set(0.0);}
 	}
 }
-}
+
 
 
 
