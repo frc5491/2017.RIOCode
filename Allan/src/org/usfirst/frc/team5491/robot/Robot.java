@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+//import edu.wpi.first.wpilibj.livewindow.LiveWindow; /*commented 3-12-17 by PB as not used*/
 import edu.wpi.first.wpilibj.*;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -113,6 +113,17 @@ public void robotInit() {
 public void autonomousInit() {
 	timer.reset();
 	timer.start();;
+	
+	/* Comments by PB on 3-12-17...
+	 * 
+	 * Check for syntax errors above (extra semicolon at the end of a line is not needed)
+	 * 
+	 * Check your boolean operators. Is "|" the correct character to test these conditions?
+	 * 
+	 * Also, USE System.out.println() to see whether or not a switch is on or off!!!!!!
+	 * 
+	 */
+	
 	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == false) {
 		AutoMode = 1;
 	}
@@ -133,6 +144,15 @@ public void autonomousInit() {
 @Override
 public void autonomousPeriodic() {
 	myTimer = timer.get();
+	
+																		/*Comment by PB on 3-12-17...
+																		 * The variable "Num" is not defined above. You need to change this to an actual
+																		 * variable you are using to decide which mode to run (above).
+																		 * 
+																		 * See modes 1 and 2, below, and correct them.
+																		 * 
+																		 * Clean up your code...make it more readable for someone else. You have a comment in a weird spot...
+																		 */
 	
 	/*if (Num == 1) { //A Mode
 		if (myTimer < 0.25) {
@@ -223,6 +243,7 @@ public void autonomousPeriodic() {
 
 @Override
 public void teleopInit() {
+	
 }
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -273,6 +294,10 @@ public void teleopPeriodic() {
 	}
 }
 }
+
+																/* Comments by PB on 3-12-19
+																 * Why do all of the buttons require button 1 to be on in order to function?
+																 */
 	/*//Button 1
 	if (ButtonBoard.getRawButton(1) == true) {
 		System.out.println(ButtonBoard.getRawButton(1));
@@ -464,7 +489,7 @@ public void testPeriodic() {
 		System.out.println(ButtonBoard.getRawAxis(2));
 	}
 		
-	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+	//myRobot.arcadeDrive(-stick.getY(), -stick.getX());
 	}
 }
 
