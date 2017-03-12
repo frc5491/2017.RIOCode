@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
 import org.opencv.core.Mat;
-//import org.opencv.core.Point;
-//import org.opencv.core.Scalar;
-//import org.opencv.imgproc.Imgproc;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
@@ -21,17 +21,16 @@ import edu.wpi.cscore.UsbCamera;
 // Public Classes & Variables; Always Running;
 
 public class Robot extends IterativeRobot {
+	Thread visionThread;
 	RobotDrive myRobot = new RobotDrive(0,1);
-	Spark myShooter = new Spark(2);
-	Spark myBallColl = new Spark(3);
+	Spark myClimber = new Spark(2);
 	DigitalInput AutonomousButtonBoardB1 = new DigitalInput(0);
 	DigitalInput AutonomousButtonBoardB2 = new DigitalInput(1);
-	Victor myShooter1 = new Victor(4);
 	Joystick stick = new Joystick(0);
 	Joystick ButtonBoard = new Joystick(1);
 	Timer timer = new Timer();
-	Thread visionThread;
-	int Num;
+	int AutoMode;
+	int DriveMode;
 	double myTimer;
 	
 // ------------------------------------------------------------------------------------------------------------------
@@ -39,7 +38,44 @@ public class Robot extends IterativeRobot {
 
 @Override
 public void robotInit() {
-	Thread t = new Thread(() -> {
+	visionThread = new Thread(() -> {
+		// Get the UsbCamera from CameraServer
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		// Set the resolution
+		camera.setResolution(160, 120);
+		camera.setFPS(30);
+		// Get a CvSink. This will capture Mats from the camera
+		CvSink cvSink = CameraServer.getInstance().getVideo();
+		// Setup a CvSource. This will send images back to the Dashboard
+		CvSource outputStream = CameraServer.getInstance().putVideo("Rectangle", 160, 120);
+
+		// Mats are very memory expensive. Lets reuse this Mat.
+		Mat mat = new Mat();
+
+		// This cannot be 'true'. The program will never exit if it is. This
+		// lets the robot stop this thread when restarting robot code or
+		// deploying.
+		while (!Thread.interrupted()) {
+			// Tell the CvSink to grab a frame from the camera and put it
+			// in the source mat.  If there is an error notify the output.
+			if (cvSink.grabFrame(mat) == 0) {
+				// Send the output the error.
+				outputStream.notifyError(cvSink.getError());
+				// skip the rest of the current iteration
+				continue;
+			}
+			// Put a rectangle on the image
+			Imgproc.rectangle(mat, new Point(100, 100), new Point(400, 400),
+					new Scalar(255, 255, 255), 5);
+			// Give the output stream a new image to display
+			outputStream.putFrame(mat);
+		}
+	});
+	visionThread.setDaemon(true);
+	visionThread.start();
+}
+	
+	/*Thread t = new Thread(() -> {
 		boolean allowCam1 = false;
 		UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
 		camera1.setResolution(200, 150);
@@ -67,28 +103,28 @@ public void robotInit() {
 			outputStream.putFrame(image);
 			}
 			});
-			t.start();;
-}
+			t.start();;*/
+
 
 // ----------------------------------------------------------------------------------------------------------------
 //Put Code In Here If You Want It To Run Once On Autonomous Startup;
 
 @Override
 public void autonomousInit() {
-	/*timer.reset();
+	timer.reset();
 	timer.start();;
 	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == false) {
-		Num = 1;
+		AutoMode = 1;
 	}
 	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == true) {
-		Num = 2;
+		AutoMode = 2;
 	}
 	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == false) {
-		Num = 3;
+		AutoMode = 3;
 	}
 	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == true) {
-		Num = 4;
-	}*/
+		AutoMode = 4;
+	}
 }
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -98,7 +134,7 @@ public void autonomousInit() {
 public void autonomousPeriodic() {
 	myTimer = timer.get();
 	
-	if (Num == 1) { //A Mode
+	/*if (Num == 1) { //A Mode
 		if (myTimer < 0.25) {
 			myRobot.drive(0.1, -1.0);
 		}
@@ -157,11 +193,11 @@ public void autonomousPeriodic() {
 				
 			}
 		}
-			if (Num == 3) { //C Mode
-				if (myTimer < 2.0) {
-					myRobot.drive(0.1, -1.0);
+			*/if (AutoMode == 3) { //C Mode
+				if (myTimer < 9.5) {
+					myRobot.drive(0.5, 0.0);
 				}
-				if (myTimer < 3.0 | myTimer > 2.0) {
+				/*if (myTimer < 3.0 | myTimer > 2.0) {
 					myRobot.drive(0.1, -1.0);
 					
 				}
@@ -172,15 +208,12 @@ public void autonomousPeriodic() {
 				if (myTimer < 6.0 | myTimer > 5.0) {
 					myShooter.set(1.0);
 					
-				}
+				}*/
 			}
 				
-				if (Num == 4) { //D Mode
-					if (myTimer < 2.0) {
-						myRobot.drive(0.1, -1.0);
-					}
-					if (myTimer < 3.0 | myTimer > 2.0) {
-						myRobot.drive(0.1, -1.0);
+				if (AutoMode == 4) { //D Mode
+					if (myTimer < 2.5) {
+						myRobot.arcadeDrive(2.0, 0.0);
 					}
 				}
 			}
@@ -190,9 +223,6 @@ public void autonomousPeriodic() {
 
 @Override
 public void teleopInit() {
-	if (ButtonBoard.getRawButton(1) == false) {
-		//myBallColl.set(5.0);;
-	}
 }
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -225,10 +255,25 @@ Button 19 =
 @Override
 public void teleopPeriodic() {
 	
-	//Drive Code
-	myRobot.arcadeDrive(stick.getY(), -stick.getX());
-	
-	//Button 1
+	if (stick.getRawButton(3) == true) {
+		DriveMode = 1;
+		myClimber.set(5.0);
+	}else{ if (stick.getRawButton(4) == true) {
+		DriveMode = 1;
+		myClimber.set(-5.0);
+	}else{ myClimber.set(0.0);
+		   DriveMode = 2;
+		   }
+		   
+	if (DriveMode == 2) {
+	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+	}
+	if (DriveMode == 1) {
+		myRobot.arcadeDrive(stick.getY(), -stick.getX());
+	}
+}
+}
+	/*//Button 1
 	if (ButtonBoard.getRawButton(1) == true) {
 		System.out.println(ButtonBoard.getRawButton(1));
 	}
@@ -256,9 +301,9 @@ public void teleopPeriodic() {
 					System.out.println(ButtonBoard.getRawButton(4));
 				}else{ myShooter.set(0.0);
 				}
-				}
+				}*/
 				
-				//Button 5
+				/*//Button 5
 				if (ButtonBoard.getRawButton(1) == true) {
 				if (ButtonBoard.getRawButton(5) == true) {
 					
@@ -375,8 +420,8 @@ public void teleopPeriodic() {
 				if (ButtonBoard.getRawAxis(19) > 0) {
 					System.out.println(ButtonBoard.getRawAxis(19));
 				}
-				}
-				}
+				}*/
+				
 				
 // ---------------------------------------------------------------------------------------------------------------
 // Put Code In Here If You Want It To Run Periodically <Or Check For A Change> During Test Mode;
@@ -385,11 +430,41 @@ public void teleopPeriodic() {
 public void testPeriodic() {
 	//Live.Window.run;
 	
-	myRobot.arcadeDrive(stick.getY(), -stick.getX());
-	
-	if (stick.getRawButton(1)) {
-		myShooter.set(stick.getThrottle());
-		}else{ myShooter.set(0.0);}
+	if (ButtonBoard.getRawButton(1) == true) {
+		System.out.println(ButtonBoard.getRawButton(1));
+	}
+	if (ButtonBoard.getRawButton(2) == true) {
+		System.out.println(ButtonBoard.getRawButton(2));
+	}
+	if (ButtonBoard.getRawButton(3) == true) {
+		System.out.println(ButtonBoard.getRawButton(3));
+	}
+	if (ButtonBoard.getRawButton(4) == true) {
+		System.out.println(ButtonBoard.getRawButton(4));
+	}
+	if (ButtonBoard.getRawButton(5) == true) {
+		System.out.println(ButtonBoard.getRawButton(5));
+	}
+	if (ButtonBoard.getRawButton(6) == true) {
+		System.out.println(ButtonBoard.getRawButton(6));
+	}
+	if (ButtonBoard.getRawButton(7) == true) {
+		System.out.println(ButtonBoard.getRawButton(7));
+	}
+	if (ButtonBoard.getRawButton(8) == true) {
+		System.out.println(ButtonBoard.getRawButton(8));
+	}
+	if (ButtonBoard.getRawButton(9) == true) {
+		System.out.println(ButtonBoard.getRawButton(9));
+	}
+	if (ButtonBoard.getRawAxis(1) > 0) {
+		System.out.println(ButtonBoard.getRawAxis(1));
+	}
+	if (ButtonBoard.getRawAxis(2) > 0) {
+		System.out.println(ButtonBoard.getRawAxis(2));
+	}
+		
+	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
 	}
 }
 
