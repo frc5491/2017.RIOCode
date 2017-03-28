@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.livewindow.LiveWindow; /*commented 3-12-17 by PB as not used*/
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -16,6 +16,8 @@ import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 //-----------------------------------------------------------------------------------------------------------------
 // Public Classes & Variables; Always Running;
@@ -32,13 +34,19 @@ public class Robot extends IterativeRobot {
 	int AutoMode;
 	int DriveMode;
 	double myTimer;
-	
+	/*Ultrasonic UltraSensor1 = new Ultrasonic(2,3); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
+	Ultrasonic UltraSensor2 = new Ultrasonic(2,2); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 2 for the echo pulse and DigitalInput 2 for the trigger pulse
+	Ultrasonic UltraSensor3 = new Ultrasonic(3,3); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 3 for the echo pulse and DigitalInput 3 for the trigger pulse
+	Ultrasonic UltraSensor4 = new Ultrasonic(4,4); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 4 for the echo pulse and DigitalInput 4 for the trigger pulse
+	*/
 // ------------------------------------------------------------------------------------------------------------------
 // Camera Code; Runs Once When Robot Boots Up;
-
+	
 @Override
 public void robotInit() {
-	visionThread = new Thread(() -> {
+//	UltraSensor1.setAutomaticMode(true);
+	
+	/*visionThread = new Thread(() -> {
 		// Get the UsbCamera from CameraServer
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		// Set the resolution
@@ -73,7 +81,11 @@ public void robotInit() {
 	});
 	visionThread.setDaemon(true);
 	visionThread.start();
+	/*UltraSensor2.setAutomaticMode(true);
+	UltraSensor3.setAutomaticMode(true);
+	UltraSensor4.setAutomaticMode(true);*/
 }
+
 	
 	/*Thread t = new Thread(() -> {
 		boolean allowCam1 = false;
@@ -112,7 +124,7 @@ public void robotInit() {
 @Override
 public void autonomousInit() {
 	timer.reset();
-	timer.start();;
+	timer.start();
 	
 	/* Comments by PB on 3-12-17...
 	 * 
@@ -124,16 +136,16 @@ public void autonomousInit() {
 	 * 
 	 */
 	
-	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == false) {
+	if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == false) {
 		AutoMode = 1;
 	}
-	if (AutonomousButtonBoardB1.get() == false | AutonomousButtonBoardB2.get() == true) {
+	if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == true) {
 		AutoMode = 2;
 	}
-	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == false) {
+	if (AutonomousButtonBoardB1.get() == true && AutonomousButtonBoardB2.get() == false) {
 		AutoMode = 3;
 	}
-	if (AutonomousButtonBoardB1.get() == true | AutonomousButtonBoardB2.get() == true) {
+	if (AutonomousButtonBoardB1.get() == true && AutonomousButtonBoardB2.get() == true) {
 		AutoMode = 4;
 	}
 }
@@ -144,98 +156,44 @@ public void autonomousInit() {
 @Override
 public void autonomousPeriodic() {
 	myTimer = timer.get();
+	/*double range1 = UltraSensor1.getRangeInches();
+	double range2 = UltraSensor2.getRangeInches();
+	double range3 = UltraSensor3.getRangeInches();
+	double range4 = UltraSensor4.getRangeInches();
 	
-																		/*Comment by PB on 3-12-17...
-																		 * The variable "Num" is not defined above. You need to change this to an actual
-																		 * variable you are using to decide which mode to run (above).
-																		 * 
-																		 * See modes 1 and 2, below, and correct them.
-																		 * 
-																		 * Clean up your code...make it more readable for someone else. You have a comment in a weird spot...
-																		 */
-	
-	/*if (Num == 1) { //A Mode
-		if (myTimer < 0.25) {
-			myRobot.drive(0.1, -1.0);
-		}
-		if (myTimer < 3.0 | myTimer > 2.0) {
-			myRobot.drive(-0.2, 0.0);
-			
-		}
-		if (myTimer < 4.0 | myTimer > 3.0) {
-			myRobot.drive(0.1, -1.0);
-			
-		}
-		if (myTimer < 5.0 | myTimer > 4.0) {
-			myRobot.drive(0.1, -1.0);
-			
-		}
-		if (myTimer < 6.0 | myTimer > 5.0) {
-			myShooter.set(1.0);
-			
-		}
-		if (myTimer < 7.0 | myTimer > 6.0) {
-			myRobot.drive(0.1, -1.0);
-			
-		}
-		if (myTimer < 8.0 | myTimer > 7.0) {
-			myRobot.drive(0.1, -1.0);
-			
+	if (AutoMode == 1) { //A Mode //Cross The Baseline
+		if (myTimer < 5.0) {
+			myRobot.drive(0.1, 0.0);
 		}
 	}
 		
-		if (Num == 2) { //B Mode
-			if (myTimer < 2.0) {
-				myRobot.drive(0.1, -1.0);
-			}
-			if (myTimer < 3.0 | myTimer > 2.0) {
-				myRobot.drive(0.1, -1.0);
-				
-			}
-			if (myTimer < 4.0 | myTimer > 3.0) {
-				myRobot.drive(0.1, -1.0);
-				
-			}
-			if (myTimer < 6.0 | myTimer > 5.0) {
-				myShooter.set(1.0);
-				
-			}
-			if (myTimer < 5.0 | myTimer > 4.0) {
-				myRobot.drive(0.1, -1.0);
-				
-			}
-			if (myTimer < 7.0 | myTimer > 6.0) {
-				myRobot.drive(0.1, -1.0);
-				
-			}
-			if (myTimer < 8.0 | myTimer > 7.0) {
-				myRobot.drive(0.1, -1.0);
-				
+		if (AutoMode == 2) { //B Mode //Center Davit Gear Placement
+			if ( range1 > 2.5 && range2 > 2.5) {
+				myRobot.drive(0.5, 0.0);
 			}
 		}
-			*/if (AutoMode == 3) { //C Mode
-				if (myTimer < 9.5) {
+			
+		if (AutoMode == 3) { //C Mode //Left Davit Gear Placement
+				if (range3 < 97.5 && range4 < 97.5) {
 					myRobot.drive(0.5, 0.0);
 				}
-				/*if (myTimer < 3.0 | myTimer > 2.0) {
-					myRobot.drive(0.1, -1.0);
-					
+				if (!(range1 == range2)) {
+					myRobot.drive(0.0, 0.1);
+				}else{
+					myRobot.drive(0.2, 0.0);
 				}
-				if (myTimer < 4.0 | myTimer > 3.0) {
-					myRobot.drive(0.1, -1.0);
-					
-				}
-				if (myTimer < 6.0 | myTimer > 5.0) {
-					myShooter.set(1.0);
-					
-				}*/
-			}
+		}
 				
-				if (AutoMode == 4) { //D Mode
-					if (myTimer < 2.5) {
-						myRobot.arcadeDrive(2.0, 0.0);
+				if (AutoMode == 4) { //D Mode //Right Davit Gear Placement
+					if (range3 < 97.5 && range4 < 97.5) {
+						myRobot.drive(0.5, 0.0);
 					}
-				}
+					if (!(range1 == range2)) {
+						myRobot.drive(0.0, -0.1);
+					}else{
+						myRobot.drive(0.2, 0.0);
+					}
+				}*/
 			}
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -275,29 +233,16 @@ Button 19 =
 
 @Override
 public void teleopPeriodic() {
-	
+
 	if (stick.getRawButton(3) == true) {
-		DriveMode = 1;
-		myClimber.set(5.0);
-	}else{ if (stick.getRawButton(4) == true) {
-		DriveMode = 1;
-		myClimber.set(-5.0);
-	}else{ myClimber.set(0.0);
-		   DriveMode = 2;
-		   }
-		   
-	if (DriveMode == 2) {
-	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
-	}
-	if (DriveMode == 1) {
+		myClimber.set(0.5);
+		myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+	}else{
+		myClimber.set(0.0);
 		myRobot.arcadeDrive(stick.getY(), -stick.getX());
-	}
-}
+		}
 }
 
-																/* Comments by PB on 3-12-19
-																 * Why do all of the buttons require button 1 to be on in order to function?
-																 */
 	/*//Button 1
 	if (ButtonBoard.getRawButton(1) == true) {
 		System.out.println(ButtonBoard.getRawButton(1));
@@ -454,8 +399,8 @@ public void teleopPeriodic() {
 @Override
 public void testPeriodic() {
 	//Live.Window.run;
-	
-	if (ButtonBoard.getRawButton(1) == true) {
+	//double range1 = UltraSensor1.getRangeInches();
+	/*if (ButtonBoard.getRawButton(1) == true) {
 		System.out.println(ButtonBoard.getRawButton(1));
 	}
 	if (ButtonBoard.getRawButton(2) == true) {
@@ -487,9 +432,10 @@ public void testPeriodic() {
 	}
 	if (ButtonBoard.getRawAxis(2) > 0) {
 		System.out.println(ButtonBoard.getRawAxis(2));
-	}
-		
-	//myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+	}*/
+	
+	//System.out.println(range1);
+	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
 	}
 }
 
