@@ -26,27 +26,30 @@ public class Robot extends IterativeRobot {
 	Thread visionThread;
 	RobotDrive myRobot = new RobotDrive(0,1);
 	Spark myClimber = new Spark(2);
-	DigitalInput AutonomousButtonBoardB1 = new DigitalInput(0);
-	DigitalInput AutonomousButtonBoardB2 = new DigitalInput(1);
+	//DigitalInput AutonomousButtonBoardB1 = new DigitalInput(0);
+	//DigitalInput AutonomousButtonBoardB2 = new DigitalInput(1);
 	Joystick stick = new Joystick(0);
-	Joystick ButtonBoard = new Joystick(1);
+	//Joystick ButtonBoard = new Joystick(1);
 	Timer timer = new Timer();
 	int AutoMode;
 	int DriveMode;
 	double myTimer;
-	/*Ultrasonic UltraSensor1 = new Ultrasonic(2,3); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
-	Ultrasonic UltraSensor2 = new Ultrasonic(2,2); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 2 for the echo pulse and DigitalInput 2 for the trigger pulse
-	Ultrasonic UltraSensor3 = new Ultrasonic(3,3); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 3 for the echo pulse and DigitalInput 3 for the trigger pulse
-	Ultrasonic UltraSensor4 = new Ultrasonic(4,4); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 4 for the echo pulse and DigitalInput 4 for the trigger pulse
-	*/
+/*	Ultrasonic UltraSensor1 = new Ultrasonic(3,2); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
+	Ultrasonic UltraSensor2 = new Ultrasonic(5,4); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 2 for the echo pulse and DigitalInput 2 for the trigger pulse
+	Ultrasonic UltraSensor3 = new Ultrasonic(7,6); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 3 for the echo pulse and DigitalInput 3 for the trigger pulse
+	Ultrasonic UltraSensor4 = new Ultrasonic(9,8); // creates the ultra object andassigns ultra to be an ultrasonic sensor which uses DigitalOutput 4 for the echo pulse and DigitalInput 4 for the trigger pulse*/
+	
 // ------------------------------------------------------------------------------------------------------------------
 // Camera Code; Runs Once When Robot Boots Up;
 	
 @Override
 public void robotInit() {
-//	UltraSensor1.setAutomaticMode(true);
+/*	UltraSensor1.setAutomaticMode(true);
+	UltraSensor2.setAutomaticMode(true);
+	UltraSensor3.setAutomaticMode(true);
+	UltraSensor4.setAutomaticMode(true);*/
 	
-	/*visionThread = new Thread(() -> {
+	visionThread = new Thread(() -> {
 		// Get the UsbCamera from CameraServer
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		// Set the resolution
@@ -73,50 +76,15 @@ public void robotInit() {
 				continue;
 			}
 			// Put a rectangle on the image
-			Imgproc.rectangle(mat, new Point(100, 100), new Point(400, 400),
-					new Scalar(255, 255, 255), 5);
+			//Imgproc.rectangle(mat, new Point(100, 100), new Point(400, 400),
+					//new Scalar(255, 255, 255), 5);
 			// Give the output stream a new image to display
 			outputStream.putFrame(mat);
 		}
 	});
 	visionThread.setDaemon(true);
 	visionThread.start();
-	/*UltraSensor2.setAutomaticMode(true);
-	UltraSensor3.setAutomaticMode(true);
-	UltraSensor4.setAutomaticMode(true);*/
 }
-
-	
-	/*Thread t = new Thread(() -> {
-		boolean allowCam1 = false;
-		UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
-		camera1.setResolution(200, 150);
-		camera1.setFPS(30);
-		UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
-		camera2.setResolution(200, 150);
-		camera2.setFPS(30);
-		CvSink cvSink1 = CameraServer.getInstance().getVideo(camera1);
-		CvSink cvSink2 = CameraServer.getInstance().getVideo(camera2);
-		CvSource outputStream = CameraServer.getInstance().putVideo("Switcher", 200, 150);
-		Mat image = new Mat();
-		while(!Thread.interrupted()) {
-			if(stick.getRawButton(2) == true) {
-				allowCam1 = !allowCam1;
-			}
-			if(allowCam1){
-				cvSink2.setEnabled(false);
-				cvSink1.setEnabled(true);
-				cvSink1.grabFrame(image);
-			}else{
-				cvSink1.setEnabled(false);
-				cvSink2.setEnabled(true);
-				cvSink2.grabFrame(image);
-			}
-			outputStream.putFrame(image);
-			}
-			});
-			t.start();;*/
-
 
 // ----------------------------------------------------------------------------------------------------------------
 //Put Code In Here If You Want It To Run Once On Autonomous Startup;
@@ -125,29 +93,21 @@ public void robotInit() {
 public void autonomousInit() {
 	timer.reset();
 	timer.start();
+	AutoMode = 1;
 	
-	/* Comments by PB on 3-12-17...
-	 * 
-	 * Check for syntax errors above (extra semicolon at the end of a line is not needed)
-	 * 
-	 * Check your boolean operators. Is "|" the correct character to test these conditions?
-	 * 
-	 * Also, USE System.out.println() to see whether or not a switch is on or off!!!!!!
-	 * 
-	 */
 	
-	if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == false) {
-		AutoMode = 1;
-	}
-	if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == true) {
+	/*if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == false) {
 		AutoMode = 2;
+	}
+	if (AutonomousButtonBoardB1.get() == true && AutonomousButtonBoardB2.get() == true) {
+		AutoMode = 1;
 	}
 	if (AutonomousButtonBoardB1.get() == true && AutonomousButtonBoardB2.get() == false) {
 		AutoMode = 3;
 	}
-	if (AutonomousButtonBoardB1.get() == true && AutonomousButtonBoardB2.get() == true) {
+	if (AutonomousButtonBoardB1.get() == false && AutonomousButtonBoardB2.get() == true) {
 		AutoMode = 4;
-	}
+	}*/
 }
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -158,40 +118,89 @@ public void autonomousPeriodic() {
 	myTimer = timer.get();
 	/*double range1 = UltraSensor1.getRangeInches();
 	double range2 = UltraSensor2.getRangeInches();
-	double range3 = UltraSensor3.getRangeInches();
+	double range3 =	UltraSensor3.getRangeInches();
 	double range4 = UltraSensor4.getRangeInches();
-	
-	if (AutoMode == 1) { //A Mode //Cross The Baseline
-		if (myTimer < 5.0) {
-			myRobot.drive(0.1, 0.0);
+	double RANGE1 = range1 + 1;
+	double RANGE2 = range2 + 1;
+	double RANGE3 = range1 - 1;
+	double RANGE4 = range2 - 1;*/
+	/*if (AutoMode == 1) { //A Mode //Cross The Baseline
+		System.out.println("I am Mode Baseline");
+		//System.out.println(range3);
+		//System.out.println(range4);
+		if (myTimer < 6.0) {
+			myRobot.arcadeDrive(0.5, 0.0);
+		}else{
+			myRobot.arcadeDrive(0.0, 0.0);
 		}
 	}
 		
 		if (AutoMode == 2) { //B Mode //Center Davit Gear Placement
-			if ( range1 > 2.5 && range2 > 2.5) {
-				myRobot.drive(0.5, 0.0);
+			System.out.println("I am Mode Center");
+			//System.out.println(range3);
+			//System.out.println(range4);
+			//if (range1 > 2.5 && range2 > 2.5) {
+			if (myTimer < 7.5) {	
+			myRobot.drive(0.5, 0.0);
+			//}else{
+			}else{
+				myRobot.arcadeDrive(0.0, 0.0);
 			}
+			//}
+			
 		}
 			
-		if (AutoMode == 3) { //C Mode //Left Davit Gear Placement
-				if (range3 < 97.5 && range4 < 97.5) {
+	/*	if (AutoMode == 3) { //C Mode //Left Davit Gear Placement
+			System.out.println("I am Mode Left");
+			System.out.println(range1);
+			System.out.println(range2);
+			if (myTimer < 2.0) {
+				myRobot.drive(1.0, 0.0);
+			}
+			if (myTimer < 3.0 && myTimer > 2.0) {
+				myRobot.drive(0.0, 0.3);
+			}
+			if (myTimer < 4.5 && myTimer > 3.0) {
+				myRobot.drive(1.0, 0.0);
+			}
+			if (myTimer < 5.0 && myTimer > 4.5) {
+				myRobot.drive(0.2, 0.0);
+			}
+			/*if (range3 < 97.5 && range4 < 97.5) {
 					myRobot.drive(0.5, 0.0);
-				}
-				if (!(range1 == range2)) {
-					myRobot.drive(0.0, 0.1);
 				}else{
-					myRobot.drive(0.2, 0.0);
-				}
-		}
-				
-				if (AutoMode == 4) { //D Mode //Right Davit Gear Placement
-					if (range3 < 97.5 && range4 < 97.5) {
-						myRobot.drive(0.5, 0.0);
-					}
-					if (!(range1 == range2)) {
-						myRobot.drive(0.0, -0.1);
+					range3 = 0.0;
+					range4 = 0.0;
+					myRobot.drive(0.0, 0.0);
+					if (!(range1 > RANGE4 && range1 < RANGE2 && range2 > RANGE3 && range2 < RANGE1)) {
+						myRobot.drive(0.0, 0.1);
 					}else{
 						myRobot.drive(0.2, 0.0);
+						if (range1 < 2.5 && range2 < 2.5) {
+							myRobot.drive(0.01, 0.0);*/
+						//}
+				//	}
+				//}
+		//}
+				
+			/*	if (AutoMode == 4) { //D Mode //Right Davit Gear Placement
+					System.out.println("I am Mode Right");
+					System.out.println(range3);
+					System.out.println(range4);
+					if (range3 < 97.5 && range4 < 97.5) {
+						myRobot.drive(0.5, 0.0);
+					}else{
+						range3 = 0.0;
+						range4 = 0.0;
+						myRobot.drive(0.0, 0.0);
+						if (!(range1 > RANGE4 && range1 < RANGE2 && range2 > RANGE3 && range2 < RANGE1)) {
+							myRobot.drive(0.0, -0.1);
+						}else{
+							myRobot.drive(0.2, 0.0);
+							if (range1 < 2.5 && range2 < 2.5) {
+								myRobot.drive(0.01, 0.0);
+							}
+						}
 					}
 				}*/
 			}
@@ -233,165 +242,19 @@ Button 19 =
 
 @Override
 public void teleopPeriodic() {
+	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+	if (stick.getRawButton(1) == true) {
+		myClimber.set(0.1);
+	}
 
 	if (stick.getRawButton(3) == true) {
-		myClimber.set(0.5);
-		myRobot.arcadeDrive(-stick.getY(), -stick.getX());
+		myClimber.set(1.0);
+		myRobot.arcadeDrive(stick.getY(), -stick.getX());
 	}else{
 		myClimber.set(0.0);
-		myRobot.arcadeDrive(stick.getY(), -stick.getX());
+		myRobot.arcadeDrive(-stick.getY(), -stick.getX());
 		}
-}
-
-	/*//Button 1
-	if (ButtonBoard.getRawButton(1) == true) {
-		System.out.println(ButtonBoard.getRawButton(1));
-	}
-	
-	//Button 2
-		if (ButtonBoard.getRawButton(1) == true) {
-		if (ButtonBoard.getRawButton(2) == true) {
-			System.out.println(ButtonBoard.getRawButton(2));
-		}
-		}
-		
-		//Button 3
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(3) == true) {
-					myBallColl.set(5.0);
-					System.out.println(ButtonBoard.getRawButton(3));
-				}else{ myBallColl.set(0.0);
-				}
-				}
-				
-				//Button 4
-				if (ButtonBoard.getRawButton(1) == false) {
-				if (ButtonBoard.getRawButton(4) == true) {
-					myShooter.set(ButtonBoard.getRawAxis(12));
-					System.out.println(ButtonBoard.getRawButton(4));
-				}else{ myShooter.set(0.0);
-				}
-				}*/
-				
-				/*//Button 5
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-					
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 6
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 7
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 8
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 9
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 10
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Button 11
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawButton(5) == true) {
-
-					System.out.println(ButtonBoard.getRawButton(5));
-				}else{
-				}
-				}
-				
-				//Throttle 12
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(12) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(12));
-				}
-				}
-				
-				//Throttle 13
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(13) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(13));
-				}
-				}
-				
-				//Throttle 14
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(14) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(14));
-				}
-				}
-				
-				//Throttle 15
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(15) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(15));
-				}
-				}
-				
-				//Throttle 16
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(16) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(16));
-				}
-				}
-				
-				//Throttle 17
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(17) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(17));
-				}
-				}
-				
-				//Throttle 18
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(18) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(18));
-				}
-				}
-				
-				//Throttle 19
-				if (ButtonBoard.getRawButton(1) == true) {
-				if (ButtonBoard.getRawAxis(19) > 0) {
-					System.out.println(ButtonBoard.getRawAxis(19));
-				}
-				}*/
-				
+}				
 				
 // ---------------------------------------------------------------------------------------------------------------
 // Put Code In Here If You Want It To Run Periodically <Or Check For A Change> During Test Mode;
@@ -399,52 +262,6 @@ public void teleopPeriodic() {
 @Override
 public void testPeriodic() {
 	//Live.Window.run;
-	//double range1 = UltraSensor1.getRangeInches();
-	/*if (ButtonBoard.getRawButton(1) == true) {
-		System.out.println(ButtonBoard.getRawButton(1));
-	}
-	if (ButtonBoard.getRawButton(2) == true) {
-		System.out.println(ButtonBoard.getRawButton(2));
-	}
-	if (ButtonBoard.getRawButton(3) == true) {
-		System.out.println(ButtonBoard.getRawButton(3));
-	}
-	if (ButtonBoard.getRawButton(4) == true) {
-		System.out.println(ButtonBoard.getRawButton(4));
-	}
-	if (ButtonBoard.getRawButton(5) == true) {
-		System.out.println(ButtonBoard.getRawButton(5));
-	}
-	if (ButtonBoard.getRawButton(6) == true) {
-		System.out.println(ButtonBoard.getRawButton(6));
-	}
-	if (ButtonBoard.getRawButton(7) == true) {
-		System.out.println(ButtonBoard.getRawButton(7));
-	}
-	if (ButtonBoard.getRawButton(8) == true) {
-		System.out.println(ButtonBoard.getRawButton(8));
-	}
-	if (ButtonBoard.getRawButton(9) == true) {
-		System.out.println(ButtonBoard.getRawButton(9));
-	}
-	if (ButtonBoard.getRawAxis(1) > 0) {
-		System.out.println(ButtonBoard.getRawAxis(1));
-	}
-	if (ButtonBoard.getRawAxis(2) > 0) {
-		System.out.println(ButtonBoard.getRawAxis(2));
-	}*/
-	
-	//System.out.println(range1);
 	myRobot.arcadeDrive(-stick.getY(), -stick.getX());
 	}
 }
-
-
-
-
-
-
-
-
-
-
